@@ -1,0 +1,6 @@
+{
+  "loan": "Please, enter loan amount in $",
+  "intRate": "Plase, enter yearly interest rate in %",
+  "loanTerm": "Please enter loan term/duration in years",
+  "continue": "Would you like to make another calculations?"
+}
