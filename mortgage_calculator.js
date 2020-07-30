@@ -1,57 +1,79 @@
-// IN: the loan amount int 
-// the Annual Percentage Rate (APR) int  + %
-// the loan duration int
-//Out: 
-//monthly interest rate int
-//loan duration in months int 12
-//monthlyPayment = int + dollars and cents $111.33 
-//let monthlyPayment = loanAmount * (monthlyInterestRate / (1 - Math.pow((1 + motnhlyInterestRate), (-loanDurationMonth))));
-
-//Take loan duration in years and convert it to months. Take intRate and convert it to montly  Then calculate monthly payment. Multiply monthly payment times amount of months to get tota Payment and deduct it from loan amount to get totalInetrest Rate. Then return those trhee numbers. 
-
-//example: 
-//in: let loanAmount = 10000         
-//in: let annualPercRate = 5         
-//in: let loanDurationYears: 10       
-//out: motnhlyPayment = $1,021.75
-//totalPayment: $128,739.87               $123.45
-//totalInterest: $28,739.87
- 
-//tests: edge cases: 
-//LoanAmount = /10.000 / ten tousands / 10000$ / 10,000 / 
-//LoanDuration = / 10.5 / ten / 10 and 6 months
-//AnnualPercantageRate = /can be 0.5 / 5% / five / 0,5
-
-
-//mothly interestRate = convert annual rate from % to decimal
-//devide annual rate by 12
-//X the loan amount
-//convert to % (X100)
-
-
-const messages = require('./mortage_messages.json');
-const readline = require('readline-sync');
-console.log("Welcome to Loant Calculator!");
+const messages = require("./mortgage_messages.json");
+const readline = require("readline-sync");
 
 function prompt(message) {
-  console.log(`=> message`);
+  console.log(`=> ${message}`);
 }
 
-while(true) {
-  prompt(messages.loan);
-  let loanAmount = readline.question();
+function isInvalidNumber(num) {
+  return (
+    num.toString().trimStart() === "" ||
+    Number.isNaN(Number(num)) ||
+    Math.sign(num) !== 1
+  );
+}
 
-  prompt(messages.intRate);
-  let annualPercantageRate = readline.question();
 
-  prompt(messages.loanterm);
-  let loanDurationYears = readline.question();
+function isInvalidInput(stringYN) {
+  if (stringYN.toLowerCase() === "yes" ||
+    stringYN.toLowerCase() === "no" ||
+    stringYN.trimStart()
+    === "") {
+    return false
+  } else {
+    return true;
+  }
+}
 
-  prompt(messages.continue);
-  let countAnother = readline.question();
+function printResult(messagee, result) {
+  console.log(`=> ${messagee} ${result}`);
+}
 
-  if(!countAnother) {
-    break;
+prompt(messages.welcome);
+
+
+let countAnother = "yes";
+
+while (countAnother[0] === "y") {
+
+  let retriveInput = (promptMessage, invalidMessage, isInvalid) => {
+    prompt(promptMessage);
+    let input = readline.question();
+    while (isInvalid(input)) {
+      prompt(invalidMessage);
+      prompt(promptMessage);
+      input = readline.question();
+    }
+    return input;
   }
 
-//};
+  let loanAmount = retriveInput(messages.loan, messages.wrongInput, isInvalidNumber);
+
+  let annualPercantageRate = retriveInput(messages.intRate, messages.wrongInput, isInvalidNumber);
+
+  let loanDurationYears = retriveInput(messages.loanTerm, messages.wrongInput, isInvalidNumber);
+
+  let countMonthlyInterestRate = (annRate) => (annRate / 100) / 12;
+
+  let countMonthlyPayment = (loanAmount, monthlyInterestRate, loanDurationYears) => {
+    return Number(((loanAmount * (monthlyInterestRate /
+      (1 - Math.pow(1 + monthlyInterestRate, -(loanDurationYears * 12))))).toFixed(2)));
+  }
+
+  let countTotalPayment = (paymentMonth, loanTerm) => {
+    return (paymentMonth * (loanTerm * 12));
+  }
+
+  let monthlyInterestRate = countMonthlyInterestRate(annualPercantageRate);
+  let monthlyPayment = countMonthlyPayment(loanAmount, monthlyInterestRate, loanDurationYears);
+  let totalPayment = countTotalPayment(monthlyPayment, loanDurationYears);
+  let totalInterest = (totalPayment - loanAmount);
+
+  printResult(messages.paymentMonth, monthlyPayment.toLocaleString());
+  printResult(messages.paymentTotal, totalPayment.toLocaleString());
+  printResult(messages.interestTotal, totalInterest.toLocaleString());
+
+  countAnother = retriveInput(messages.continue, messages.invalid, isInvalidInput);
+
+  if (countAnother[0].toLowerCase() !== "y") break;
+}
