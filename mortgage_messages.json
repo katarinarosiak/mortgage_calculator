@@ -1,6 +1,12 @@
 {
-  "loan": "Please, enter loan amount in $",
+  "welcome": "Welcome to Loan Calculator!",
+  "loan": "Please, enter loan amount in USD",
   "intRate": "Plase, enter yearly interest rate in %",
   "loanTerm": "Please enter loan term/duration in years",
-  "continue": "Would you like to make another calculations?"
+  "continue": "Would you like to make another calculations?",
+  "paymentMonth": "Your monthly payment will be:",
+  "paymentTotal": "Your total payment will be: ",
+  "interestTotal": "The total interest will be: ",
+  "wrongInput": "Please enter only numbers. Use '.' instead of ',' ",
+  "invalid": "Please answer yes or no"
 }
